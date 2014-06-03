@@ -1,0 +1,9 @@
+/home/akanksha/test/gr-howto/build/swig/CMakeFiles/_howto_swig.dir
+/home/akanksha/test/gr-howto/build/swig/CMakeFiles/_howto_swig_doc_tag.dir
+/home/akanksha/test/gr-howto/build/swig/CMakeFiles/_howto_swig_swig_tag.dir
+/home/akanksha/test/gr-howto/build/lib/CMakeFiles/gnuradio-howto.dir
+/home/akanksha/test/gr-howto/build/apps/CMakeFiles/pygen_apps_9a6dd.dir
+/home/akanksha/test/gr-howto/build/python/CMakeFiles/pygen_python_889f7.dir
+/home/akanksha/test/gr-howto/build/swig/CMakeFiles/pygen_swig_41c35.dir
+/home/akanksha/test/gr-howto/build/lib/CMakeFiles/test-howto.dir
+/home/akanksha/test/gr-howto/build/CMakeFiles/uninstall.dir

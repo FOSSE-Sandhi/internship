@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
+  <compounddef id="dir_54d02e0ec3de3397f128764a228f9194" kind="dir">
+    <compoundname>/home/akanksha/test/gr-howto/include/</compoundname>
+    <innerdir refid="dir_f3184646ae70087d90bbf3e300efcad8">/home/akanksha/test/gr-howto/include/howto/</innerdir>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/akanksha/test/gr-howto/include/"/>
+  </compounddef>
+</doxygen>
