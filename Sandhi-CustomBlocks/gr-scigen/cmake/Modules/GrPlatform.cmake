@@ -17,30 +17,30 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
-########################################################################
-# Include python install macros
-########################################################################
-include(GrPython)
-if(NOT PYTHONINTERP_FOUND)
+if(DEFINED __INCLUDED_GR_PLATFORM_CMAKE)
     return()
+endif()
+set(__INCLUDED_GR_PLATFORM_CMAKE TRUE)
+
+########################################################################
+# Setup additional defines for OS types
+########################################################################
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+endif()
+
+if(LINUX AND EXISTS "/etc/debian_version")
+    set(DEBIAN TRUE)
+endif()
+
+if(LINUX AND EXISTS "/etc/redhat-release")
+    set(REDHAT TRUE)
 endif()
 
 ########################################################################
-# Install python sources
+# when the library suffix should be 64 (applies to redhat linux family)
 ########################################################################
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    tf_csim.py
-    multiorder_tf.py DESTINATION ${GR_PYTHON_DIR}/tf
-)
-
-########################################################################
-# Handle the unit tests
-########################################################################
-include(GrTest)
-
-set(GR_TEST_TARGET_DEPS gnuradio-tf)
-set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-GR_ADD_TEST(qa_tf_csim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_tf_csim.py)
-GR_ADD_TEST(qa_multiorder_tf ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_multiorder_tf.py)
+if(NOT DEFINED LIB_SUFFIX AND REDHAT AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
+    set(LIB_SUFFIX 64)
+endif()
+set(LIB_SUFFIX ${LIB_SUFFIX} CACHE STRING "lib directory suffix")

@@ -18,29 +18,44 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Include python install macros
+# Include swig generation macros
 ########################################################################
-include(GrPython)
-if(NOT PYTHONINTERP_FOUND)
+find_package(SWIG)
+find_package(PythonLibs)
+if(NOT SWIG_FOUND OR NOT PYTHONLIBS_FOUND)
     return()
 endif()
+include(GrSwig)
+include(GrPython)
 
 ########################################################################
-# Install python sources
+# Setup swig generation
 ########################################################################
-GR_PYTHON_INSTALL(
+foreach(incdir ${GNURADIO_CORE_INCLUDE_DIRS})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/swig)
+endforeach(incdir)
+
+foreach(incdir ${GRUEL_INCLUDE_DIRS})
+    list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gruel/swig)
+endforeach(incdir)
+
+set(GR_SWIG_LIBRARIES gnuradio-scigen)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/scigen_swig_doc.i)
+set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
+GR_SWIG_MAKE(scigen_swig scigen_swig.i)
+
+########################################################################
+# Install the build swig module
+########################################################################
+GR_SWIG_INSTALL(TARGETS scigen_swig DESTINATION ${GR_PYTHON_DIR}/scigen)
+
+########################################################################
+# Install swig .i files for development
+########################################################################
+install(
     FILES
-    __init__.py
-    tf_csim.py
-    multiorder_tf.py DESTINATION ${GR_PYTHON_DIR}/tf
+    scigen_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/scigen_swig_doc.i
+    DESTINATION ${GR_INCLUDE_DIR}/scigen/swig
 )
-
-########################################################################
-# Handle the unit tests
-########################################################################
-include(GrTest)
-
-set(GR_TEST_TARGET_DEPS gnuradio-tf)
-set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-GR_ADD_TEST(qa_tf_csim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_tf_csim.py)
-GR_ADD_TEST(qa_multiorder_tf ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_multiorder_tf.py)

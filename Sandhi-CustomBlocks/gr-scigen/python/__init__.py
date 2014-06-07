@@ -19,7 +19,7 @@
 # The presence of this file turns this directory into a Python package
 
 '''
-This is the GNU Radio TF module. Place your Python package
+This is the GNU Radio SCIGEN module. Place your Python package
 description here (python/__init__.py).
 '''
 
@@ -41,12 +41,11 @@ if _RTLD_GLOBAL != 0:
 # ----------------------------------------------------------------
 
 
-# import swig generated symbols into the tf namespace
-from tf_swig import *
+# import swig generated symbols into the scigen namespace
+from scigen_swig import *
 
 # import any pure python here
-from tf_csim import tf_csim
-from multiorder_tf import multiorder_tf
+from scifile import scifile
 #
 
 # ----------------------------------------------------------------

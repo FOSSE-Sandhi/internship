@@ -18,6 +18,5 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    tf_tf_csim.xml
-    tf_multiorder_tf.xml DESTINATION share/gnuradio/grc/blocks
+    scigen_scifile.xml DESTINATION share/gnuradio/grc/blocks
 )

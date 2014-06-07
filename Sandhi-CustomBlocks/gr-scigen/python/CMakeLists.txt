@@ -31,8 +31,7 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    tf_csim.py
-    multiorder_tf.py DESTINATION ${GR_PYTHON_DIR}/tf
+    scifile.py DESTINATION ${GR_PYTHON_DIR}/scigen
 )
 
 ########################################################################
@@ -40,7 +39,6 @@ GR_PYTHON_INSTALL(
 ########################################################################
 include(GrTest)
 
-set(GR_TEST_TARGET_DEPS gnuradio-tf)
+set(GR_TEST_TARGET_DEPS gnuradio-scigen)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-GR_ADD_TEST(qa_tf_csim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_tf_csim.py)
-GR_ADD_TEST(qa_multiorder_tf ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_multiorder_tf.py)
+GR_ADD_TEST(qa_scifile ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_scifile.py)

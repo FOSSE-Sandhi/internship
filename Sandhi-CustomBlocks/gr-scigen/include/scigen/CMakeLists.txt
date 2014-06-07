@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -17,7 +17,10 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 
+########################################################################
+# Install public header files
+########################################################################
 install(FILES
-    tf_tf_csim.xml
-    tf_multiorder_tf.xml DESTINATION share/gnuradio/grc/blocks
+    api.h
+    DESTINATION include/scigen
 )

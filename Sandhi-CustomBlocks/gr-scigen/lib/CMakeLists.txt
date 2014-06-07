@@ -1,4 +1,4 @@
-# Copyright 2011 Free Software Foundation, Inc.
+# Copyright 2011,2012 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -18,29 +18,49 @@
 # Boston, MA 02110-1301, USA.
 
 ########################################################################
-# Include python install macros
+# Setup library
 ########################################################################
-include(GrPython)
-if(NOT PYTHONINTERP_FOUND)
-    return()
-endif()
+include(GrPlatform) #define LIB_SUFFIX
+
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIRS})
+
+list(APPEND scigen_sources
+)
+
+add_library(gnuradio-scigen SHARED ${scigen_sources})
+target_link_libraries(gnuradio-scigen ${Boost_LIBRARIES} ${GRUEL_LIBRARIES} ${GNURADIO_CORE_LIBRARIES})
+set_target_properties(gnuradio-scigen PROPERTIES DEFINE_SYMBOL "gnuradio_scigen_EXPORTS")
 
 ########################################################################
-# Install python sources
+# Install built library files
 ########################################################################
-GR_PYTHON_INSTALL(
-    FILES
-    __init__.py
-    tf_csim.py
-    multiorder_tf.py DESTINATION ${GR_PYTHON_DIR}/tf
+install(TARGETS gnuradio-scigen
+    LIBRARY DESTINATION lib${LIB_SUFFIX} # .so/.dylib file
+    ARCHIVE DESTINATION lib${LIB_SUFFIX} # .lib file
+    RUNTIME DESTINATION bin              # .dll file
 )
 
 ########################################################################
-# Handle the unit tests
+# Build and register unit test
 ########################################################################
 include(GrTest)
 
-set(GR_TEST_TARGET_DEPS gnuradio-tf)
-set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-GR_ADD_TEST(qa_tf_csim ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_tf_csim.py)
-GR_ADD_TEST(qa_multiorder_tf ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_multiorder_tf.py)
+include_directories(${CPPUNIT_INCLUDE_DIRS})
+
+list(APPEND test_scigen_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_scigen.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_scigen.cc
+)
+
+add_executable(test-scigen ${test_scigen_sources})
+
+target_link_libraries(
+  test-scigen
+  ${GNURADIO_CORE_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${CPPUNIT_LIBRARIES}
+  gnuradio-scigen
+)
+
+GR_ADD_TEST(test_scigen test-scigen)
