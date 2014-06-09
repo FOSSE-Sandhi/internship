@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+#import gviz_api
+import threading
 import urllib
-import serial
+import time
 import json
-import re
 import sbhs
+
+sem = threading.Semaphore(1)
 
 class Server:
 	def __init__(self):
-		self.url = "http://localhost:8080/sign"
 		self.heat = 0
 		self.fan = 0
 		self.temp = 0
@@ -17,15 +20,13 @@ class Server:
                 self.machine_id = line.split("=")[0]
                 fp.close()
 
-	def get_values(self):
+	def get_values(self,url_data):
 		'''Retrieve posted values from URL'''
-		url_obj = urllib.urlopen(self.url)
-		url_data = url_obj.read()
 		url_data = json.loads(url_data)
 		self.heat = url_data[0]
 		self.fan = url_data[1]
-		print "heat:",self.heat,type(self.heat)
-		print "fan:",self.fan,type(self.fan)
+		#print "heat:",self.heat,type(self.heat)
+		#print "fan:",self.fan,type(self.fan)
 	
 	def connect(self):
 		'''Connect to device using machine id.'''
@@ -57,18 +58,92 @@ class Server:
 		'''Disconnect device.'''
                 self.sbhs.disconnect()
 
-if __name__ == "__main__":
+
+def func(url_data):
+	sem.acquire()
 	server = Server()
-	server.get_values()
+	#print url_data,type(url_data)
+	server.get_values(url_data)
 	server.connect()
 	server.setHeat()
 	server.setFan()
 	temps = []
-	for i in range(100):
-		#a = server.getTemp()
-		a = i
-		#print "Temp:",a
-		temps.append(a)
-	vals = urllib.urlencode({"temps":temps})
-	url = urllib.urlopen("http://localhost:8080/response",vals)
-	server.disconnect()	
+	j = 0
+        for i in range(75):
+	        a = server.getTemp()
+                #a = i
+                #print "Temp:",a
+                temps.append([str(j),a])
+		j += 2
+                time.sleep(2)
+        #vals = urllib.urlencode({"temps":json.dumps(temps)})
+	#print temps
+	temps.insert(0,["Time","Temperature"])
+	temps = json.dumps(temps)
+	res = """<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(%(temps)s);
+        var options = {
+          title: 'Temperature vs Time'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 1200px; height: 700px;"></div>
+  </body>
+</html>
+"""
+
+
+
+
+
+	# Putting the JS code and JSon string into the template
+	value = res % vars()
+
+	vals = urllib.urlencode({"temps":value})
+        response_url = urllib.urlopen("http://localhost:8080/response",vals)
+        server.disconnect()
+	sem.release()
+
+	
+class Threads(threading.Thread):
+	def __init__(self,fn,url_data):
+		threading.Thread.__init__(self,target=fn,args=url_data)
+	def run(self):
+		threading.Thread.run(self)
+
+if __name__=="__main__":
+	url = "http://localhost:8080/sign"
+        request = False
+        url_obj = None
+        url_data = None
+        prev_data = ""
+	while(True):
+		url_data = ""
+                while(not request):
+                        print "waiting for request"
+                        try:
+                                url_obj = urllib.urlopen(url)
+                                url_data = url_obj.read()
+                                if(prev_data == url_data):
+                                        time.sleep(5)
+                                        continue
+                                request = True
+                                prev_data = url_data
+			except:
+				time.sleep(5)
+				continue
+                thr = Threads(func,(url_data,))
+		thr.start()
+		request = False
+		

@@ -1,10 +1,11 @@
 import webapp2
-import re
 import cgi
 import json
 from google.appengine.ext import db
 import urllib
-import os
+import time
+
+
 class MainPage(webapp2.RequestHandler):
     def get(self):
 	self.response.headers['Content-Type'] = 'text/plain'
@@ -12,10 +13,12 @@ class MainPage(webapp2.RequestHandler):
 	fan = self.request.get("fan")
 	print "heat: ",heat
 	print "fan: ",fan
+	#print self.request.remote_addr
 	vals = urllib.urlencode({'heat':heat,'fan':fan})
 	url = urllib.urlopen("http://localhost:8080/sign",vals)
-	#os.system("python server.py")
-	#self.redirect("/response")
+	#Hardcoded to sleep for 15 seconds : change later if necessary
+	time.sleep(180)
+	self.redirect("/response")
 
 
 class Server(webapp2.RequestHandler):
@@ -26,7 +29,7 @@ class Server(webapp2.RequestHandler):
 	global fan
 	self.response.headers['Content-Type'] = 'text/plain'
 	res = [heat,fan]
-	print "Server get:",res
+	#print "Server get:",res
 	self.response.write(json.dumps(res))
 
     def post(self):
@@ -34,18 +37,23 @@ class Server(webapp2.RequestHandler):
 	global fan
 	heat = int(cgi.escape(self.request.get('heat')))
 	fan = int(cgi.escape(self.request.get('fan')))
-	print "Heat & fan in server post:",heat,fan	
+	#print "Heat & fan in server post:",heat,fan	
+
 
 class Response(webapp2.RequestHandler):
 	temp = "No temperature received."
 	def post(self):
 		global temp
 		self.response.headers['Content-type'] = "text/html"
-		temp = cgi.escape(self.request.get("temps"))	
-		print temp
+		temp = self.request.get("temps")	
+		#temp = json.loads(temp)
+		temp = urllib.unquote(temp)
+		#print temp,type(temp)
+	
 	def get(self):
 		global temp
-		self.response.write(temp)
+		self.response.headers['Content-type'] = "text/html"
+		self.response.out.write(temp)
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
