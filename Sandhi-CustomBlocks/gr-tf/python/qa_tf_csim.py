@@ -37,7 +37,7 @@ class qa_tf_csim (gr_unittest.TestCase):
 	
 	src = gr.vector_source_f (src_data)
 	sqr = tf_csim()
-	sqr.set_parameters(2,0.5,0.6,0,0,0,0,1100)
+	sqr.set_parameters(2,0.5,0.6,"(2*s + 1)/(s + 2)",1100)
 	
 	#Preload
 	sqr.input_config(1).preload_items = 1

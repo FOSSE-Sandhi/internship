@@ -13,7 +13,7 @@ CSIM Block:
 
     <import>import tf_csim</import>
     <make>tf_csim.tf_csim()
-self.$(id).set_parameters($P, $I, $D, $n0, $n1, $d0, $d1, $window)
+self.$(id).set_parameters($P, $I, $D, $tf, $window)
     </make>
     <param>
         <name>IO Type</name>
@@ -44,7 +44,8 @@ self.$(id).set_parameters($P, $I, $D, $n0, $n1, $d0, $d1, $window)
     <!--
     Desimulation options
     -->
-     <param>
+
+   <param>
         <name>Controller Gain(P)</name>
         <key>P</key>
         <value>0</value>
@@ -64,30 +65,10 @@ self.$(id).set_parameters($P, $I, $D, $n0, $n1, $d0, $d1, $window)
     </param>
 
     <param>
-        <name>n0</name>
-        <key>n0</key>
-        <value>0</value>
-        <type>real</type>
-    </param>
-
-     <param>
-        <name>n1</name>
-        <key>n1</key>
-        <value>0</value>
-        <type>real</type>
-    </param>
-   <param>
-        <name>d0</name>
-        <key>d0</key>
-        <value>0</value>
-        <type>real</type>
-    </param>
-
-    <param>
-        <name>d1</name>
-        <key>d1</key>
-        <value>0</value>
-        <type>real</type>
+        <name>Transfer Function</name>
+        <key>tf</key>
+        <value>""</value>
+        <type>string</type>
     </param>
 
     <param>
@@ -119,14 +100,13 @@ self.$(id).set_parameters($P, $I, $D, $n0, $n1, $d0, $d1, $window)
 
 Continuous time simulation
 
-out[i] = in0[i] + in1[i] + in2[i]
+The block simulates the dynamics of plant and controller. Insert the values of P,I and D for the controller and the transfer function of the plant. The trasfer function should be in the following format:
+"(a*s^n + b*s^(n-1) + .... + z)/(A*s^n + B*s^(n-1) + .... + Z)"
 
-The math block adds an arbitrary number of input streams element by element, \
-and produces and single output stream. Elements may be single numbers, \
-or vectors of numbers, depending upon the value of the vec length parameter.
+Note that the variable must be the character 's'.
 
-The preload parameter allows users to implement feedback loops with this math block. \
-For example, to enable a feedback of 1 on the 2nd port, set preload to [0, 0, 1]. \
+The block can also work as a pure csim block for plant/controller if the other parameters are kept null, i.e. if the P,I and D variables are set to 0, the block simply simulates the transfer function mentioned and vice versa.
+
     </doc>
 </block>
 
