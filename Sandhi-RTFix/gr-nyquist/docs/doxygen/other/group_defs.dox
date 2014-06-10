@@ -1,0 +1,7 @@
+/*!
+ * \defgroup block GNU Radio NYQUIST C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the NYQUIST GNU Radio
+ *        module are listed here or in the subcategories below.
+ *
+ */
+
