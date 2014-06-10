@@ -16,8 +16,8 @@ class MainPage(webapp2.RequestHandler):
 	#print self.request.remote_addr
 	vals = urllib.urlencode({'heat':heat,'fan':fan})
 	url = urllib.urlopen("http://localhost:8080/sign",vals)
-	#Hardcoded to sleep for 15 seconds : change later if necessary
-	time.sleep(180)
+	#Hardcoded to sleep for 2 seconds : change later if necessary
+	time.sleep(2)
 	self.redirect("/response")
 
 

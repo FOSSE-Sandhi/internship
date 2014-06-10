@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-#import gviz_api
+import gviz_api
 import threading
 import urllib
 import time
 import json
 import sbhs
+
+#Number of iterations for the loop - to get a stable temperature value
+NUM_ITER = 50 
 
 sem = threading.Semaphore(1)
 
@@ -67,51 +70,69 @@ def func(url_data):
 	server.connect()
 	server.setHeat()
 	server.setFan()
-	temps = []
-	j = 0
-        for i in range(75):
-	        a = server.getTemp()
-                #a = i
+	num_iter = NUM_ITER
+	#temps = []
+	tim = 0
+	description = [('Time','string'),('Temperature','number')]
+	table = gviz_api.DataTable(description)
+        for i in range(NUM_ITER):
+	        temperature = server.getTemp()
+                #temperature = i
                 #print "Temp:",a
-                temps.append([str(j),a])
-		j += 2
-                time.sleep(2)
-        #vals = urllib.urlencode({"temps":json.dumps(temps)})
-	#print temps
-	temps.insert(0,["Time","Temperature"])
-	temps = json.dumps(temps)
-	res = """<html>
-  <head>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable(%(temps)s);
-        var options = {
-          title: 'Temperature vs Time'
-        };
+                #temps.append([str(j),a])
+		#j += 2
+                #time.sleep(2)
+       		#vals = urllib.urlencode({"temps":json.dumps(temps)})
+		#print temps
+		#temps.insert(0,["Time","Temperature"])
+		#temps = json.dumps(temps)
+		res = """
+		<html>
+ 	 		<head>
+    				<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    				<script type="text/javascript">
+      					var t;
+					function redirect()
+      					{		
+						location.reload(true)
+      					}
+					if(%(i)d < (%(num_iter)d-1))
+					{
+						//refresh every 2 seconds
+      						t = setTimeout("redirect();",2000)
+					}
+       					google.load("visualization", "1", {packages:["corechart"]});
+      					google.setOnLoadCallback(drawChart);
+      					function drawChart()
+					{
+						var data = new google.visualization.DataTable(%(values)s,0.6);
+        					var options = {
+          						title: 'Temperature vs Time'
+        						};
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-    </script>
-  </head>
-  <body>
-    <div id="chart_div" style="width: 1200px; height: 700px;"></div>
-  </body>
-</html>
+        					var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        					chart.draw(data, options);
+      					}
+    				</script>
+  			</head>
+  			<body>
+    				<div id="chart_div" style="width: 1200px; height: 700px;"></div>
+  			</body>
+		</html>
 """
 
-
-
+		
+		table.AppendData([[str(tim),temperature]])
+		values = table.ToJSon(columns_order=("Time","Temperature"))
 
 
 	# Putting the JS code and JSon string into the template
-	value = res % vars()
+		value = res % vars()
 
-	vals = urllib.urlencode({"temps":value})
-        response_url = urllib.urlopen("http://localhost:8080/response",vals)
+		vals = urllib.urlencode({"temps":value})
+        	response_url = urllib.urlopen("http://localhost:8080/response",vals)
+		time.sleep(2)
+		tim += 2
         server.disconnect()
 	sem.release()
 
@@ -136,7 +157,7 @@ if __name__=="__main__":
                                 url_obj = urllib.urlopen(url)
                                 url_data = url_obj.read()
                                 if(prev_data == url_data):
-                                        time.sleep(5)
+                                        time.sleep(2)
                                         continue
                                 request = True
                                 prev_data = url_data
