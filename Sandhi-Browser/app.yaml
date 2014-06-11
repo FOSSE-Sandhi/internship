@@ -17,6 +17,9 @@ handlers:
 - url: /fonts
   static_dir: fonts
 
+- url: /request
+  static_dir: .
+
 - url: /.*
   script: appengine.application
 
