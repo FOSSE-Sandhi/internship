@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<block>
+  <name>plzr</name>
+  <key>plzr_plzr</key>
+  <category>plzr</category>
+  <import>import plzr</import>
+  <make>plzr.plzr()
+self.$(id).set_parameters($n,$d)
+</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Transfer function numerator</name>
+    <key>n</key>
+    <value></value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Transfer function denominator</name>
+    <key>d</key>
+    <value></value>
+    <type>string</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>

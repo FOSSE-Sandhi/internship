@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##
+CSIM Block:
+##    all types, 1 output, 2 to inf inputs
+###################################################
+ -->
+<block>
+    <name>Poly-range</name>
+    <key>poly_range</key>
+    <category>PolyBlocks</category>
+
+    <import>import poly_range</import>
+    <make>poly_range.poly_range()
+self.$(id).set_parameters($polynomial, $x_range,$xlabel,$ylabel)
+    </make>
+    <param>
+        <name>IO Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option><name>FC32_FC32</name><key>fc32_fc32</key></option>
+        <option><name>F32_F32</name><key>f32_f32</key></option>
+        <option><name>SC32_SC32</name><key>sc32_sc32</key></option>
+        <option><name>S32_S32</name><key>s32_s32</key></option>
+        <option><name>SC16_SC16</name><key>sc16_sc16</key></option>
+        <option><name>S16_S16</name><key>s16_s16</key></option>
+        <option><name>SC8_SC8</name><key>sc8_sc8</key></option>
+        <option><name>S8_S8</name><key>s8_s8</key></option>
+    </param>
+    <param>
+        <name>Num Inputs</name>
+        <key>num_inputs</key>
+        <value>1</value>
+        <type>int</type>
+    </param>
+    <param>
+        <name>Vec Length</name>
+        <key>vlen</key>
+        <value>1</value>
+        <type>int</type>
+    </param>
+
+    <!--
+    Desimulation options
+    -->
+
+   <param>
+        <name>Polynomial</name>
+        <key>polynomial</key>
+        <value>""</value>
+        <type>string</type>
+    </param>
+    <param>
+        <name>X-range</name>
+        <key>x_range</key>
+        <value>""</value>
+        <type>string</type>
+    </param>
+
+    <param>
+        <name>X-Label</name>
+        <key>xlabel</key>
+        <value>""</value>
+        <type>string</type>
+    </param>
+
+    <param>
+        <name>Y-Label</name>
+        <key>ylabel</key>
+        <value>""</value>
+        <type>string</type>
+    </param>
+
+
+    <!--
+    Check if number of inputs are greater than 0, and if vector length
+    is greater than 0.
+    -->
+    <check>$num_inputs &gt; 0</check>
+    <check>$vlen &gt; 0</check>
+    <sink>
+        <name>in</name>
+        <type>$(str($type).split('_')[0])</type>
+        <vlen>$vlen</vlen>
+        <nports>$num_inputs</nports>
+    </sink>
+    <source>
+        <name>out</name>
+        <type>$(str($type).split('_')[1])</type>
+        <vlen>$vlen</vlen>
+    </source>
+    <doc>
+
+The block plots a polynomial against the points mentioned in the xrange. Input the polynomial with 'x' as the variable in the following format:
+	"10 -2*x + 15*x^2 + x^3"
+Input the range in the following format:
+	"[initial_point:point_difference:final_point"
+eg: "[-30:0.01:30]"
+
+Further, input the X-label and the Y-label for the plot in corresponding fields.
+
+Note that all the parameters must be written within the quotes.
+    <doc>
+<block>
