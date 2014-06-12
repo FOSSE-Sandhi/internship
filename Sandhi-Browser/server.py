@@ -1,20 +1,17 @@
-#!/usr/bin/env python
 import gviz_api
-import threading
 import urllib
 import time
-import json
 import sbhs
+import BaseHTTPServer
+import cgi
 
 #Number of iterations for the loop - to get a stable temperature value
 NUM_ITER = 50 
 
-sem = threading.Semaphore(1)
-
 class Server:
-	def __init__(self):
-		self.heat = 0
-		self.fan = 0
+	def __init__(self,heat,fan):
+		self.heat = heat
+		self.fan = fan
 		self.temp = 0
 		self.sbhs = sbhs.Sbhs()
 		fp = open("map_machine_ids.txt","r")
@@ -23,14 +20,6 @@ class Server:
                 self.machine_id = line.split("=")[0]
                 fp.close()
 
-	def get_values(self,url_data):
-		'''Retrieve posted values from URL'''
-		url_data = json.loads(url_data)
-		self.heat = url_data[0]
-		self.fan = url_data[1]
-		#print "heat:",self.heat,type(self.heat)
-		#print "fan:",self.fan,type(self.fan)
-	
 	def connect(self):
 		'''Connect to device using machine id.'''
                 try:
@@ -61,32 +50,39 @@ class Server:
 		'''Disconnect device.'''
                 self.sbhs.disconnect()
 
+HOST_NAME = "localhost"
+PORT_NUMBER = 9000
 
-def func(url_data):
-	sem.acquire()
-	server = Server()
-	#print url_data,type(url_data)
-	server.get_values(url_data)
-	server.connect()
-	server.setHeat()
-	server.setFan()
-	num_iter = NUM_ITER
-	#temps = []
-	tim = 0
-	description = [('Time','string'),('Temperature','number')]
-	table = gviz_api.DataTable(description)
-        for i in range(NUM_ITER):
-	        temperature = server.getTemp()
-                #temperature = i
-                #print "Temp:",a
-                #temps.append([str(j),a])
-		#j += 2
-                #time.sleep(2)
-       		#vals = urllib.urlencode({"temps":json.dumps(temps)})
-		#print temps
-		#temps.insert(0,["Time","Temperature"])
-		#temps = json.dumps(temps)
-		res = """
+class RequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+	heat = 0
+	fan = 0	
+	def do_POST(self):
+		global heat
+		global fan		
+		self.send_response(200)
+		self.wfile.write("")
+		form = cgi.FieldStorage(
+            fp=self.rfile, 
+            headers=self.headers,
+            environ={'REQUEST_METHOD':'POST',
+                     'CONTENT_TYPE':self.headers['Content-Type'],
+                     })
+		heat = int(form['heat'].value)
+		fan = int(form['fan'].value)
+		
+		server = Server(heat,fan)
+		server.connect()
+	        server.setHeat()
+	        server.setFan()
+		num_iter = NUM_ITER
+		tim = 0
+	        description = [('Time','string'),('Temperature','number')]
+	        table = gviz_api.DataTable(description)
+		print "Entering loop"
+		for i in range(NUM_ITER):
+                	#temperature = server.getTemp()
+			temperature = i
+			res = """
 		<html>
  	 		<head>
     				<script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -120,51 +116,20 @@ def func(url_data):
   			</body>
 		</html>
 """
-
-		
-		table.AppendData([[str(tim),temperature]])
-		values = table.ToJSon(columns_order=("Time","Temperature"))
+			table.AppendData([[str(tim),temperature]])
+                	values = table.ToJSon(columns_order=("Time","Temperature"))
 
 
-	# Putting the JS code and JSon string into the template
-		value = res % vars()
+        		# Putting the JS code and JSon string into the template
+                	value = res % vars()
 
-		vals = urllib.urlencode({"temps":value})
-        	response_url = urllib.urlopen("http://localhost:8080/response",vals)
-		time.sleep(2)
-		tim += 2
-        server.disconnect()
-	sem.release()
+                	vals = urllib.urlencode({"temps":value})
+                	response_url = urllib.urlopen("http://localhost:8080/response",vals)
+                	time.sleep(2)
+                	tim += 2
+		print "Loop terminated"
+		server.disconnect()
 
-	
-class Threads(threading.Thread):
-	def __init__(self,fn,url_data):
-		threading.Thread.__init__(self,target=fn,args=url_data)
-	def run(self):
-		threading.Thread.run(self)
-
-if __name__=="__main__":
-	url = "http://localhost:8080/sign"
-        request = False
-        url_obj = None
-        url_data = None
-        prev_data = ""
-	while(True):
-		url_data = ""
-                while(not request):
-                        print "waiting for request"
-                        try:
-                                url_obj = urllib.urlopen(url)
-                                url_data = url_obj.read()
-                                if(prev_data == url_data):
-                                        time.sleep(2)
-                                        continue
-                                request = True
-                                prev_data = url_data
-			except:
-				time.sleep(5)
-				continue
-                thr = Threads(func,(url_data,))
-		thr.start()
-		request = False
-		
+if __name__ == "__main__":
+	httpd = BaseHTTPServer.HTTPServer((HOST_NAME,PORT_NUMBER),RequestHandler)
+	httpd.serve_forever()
