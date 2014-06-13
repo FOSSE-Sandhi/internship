@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Wed Jun 11 14:29:28 2014
+# Generated: Fri Jun 13 11:50:01 2014
 ##################################################
 
 from gnuradio import eng_notation
@@ -30,13 +30,13 @@ class top_block(grc_wxgui.top_block_gui):
 		self.gr_null_source_0 = gr.null_source(gr.sizeof_float*1)
 		self.gr_null_sink_0 = gr.null_sink(gr.sizeof_float*1)
 		self.bode_bode_0 = bode.bode()
-		self.bode_bode_0.set_parameters("0,1,2*0.9*10,100","0,1,2*0.3*10.1,102.01","","")
+		self.bode_bode_0.set_parameters("0,1,2*0.9*10,100","0,1,2*0.3*10.1,102.01")
 
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.bode_bode_0, 0), (self.gr_null_sink_0, 0))
 		self.connect((self.gr_null_source_0, 0), (self.bode_bode_0, 0))
+		self.connect((self.bode_bode_0, 0), (self.gr_null_sink_0, 0))
 
 
 	def get_samp_rate(self):

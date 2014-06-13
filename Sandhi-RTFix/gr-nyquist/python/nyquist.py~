@@ -17,27 +17,51 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
-
+import wx
 import numpy
 from gnuradio import gr
 import sciscipy
+from scipy import signal
+import numpy as np
+import matplotlib.pyplot as plt
+
 class nyquist(gr.sync_block):
     """
-    Nyquist plot i.e Imaginary part versus Real part of the frequency response of the product of two transfer functions
+    docstring for block nyquist
     """
-    def __init__(self):
+    def __init__(self,parent):
         gr.sync_block.__init__(self,
             name="nyquist",
             in_sig=[numpy.float32],
             out_sig=[numpy.float32])
+	self.parent=parent
+	self.parent.GetParent().Show(False)
 	
+#	self.nplot()
     
     def set_parameters(self,a,b,c,d):
 	self.a=a
 	self.b=b
 	self.c=c
-	self.d=d	
+	self.d=d
+
 	self.nplot()
+	# self.parent.GetTopLevelParent().Hide()
+
+#    def nplot(self):
+#	p=map(float,self.a.split(','))
+#	q=map(float,self.b.split(','))
+#	r=map(float,self.c.split(','))
+#	s=map(float,self.d.split(','))
+#	h1=np.polymul(p,r)
+#	h2=np.polymul(q,s)
+#	s=signal.lti(h1,h2)
+#	w,h=signal.freqresp(s)
+#	plt.figure()
+#	plt.plot(h.real,h.imag,'b')
+#	plt.plot(h.real,-h.imag,'r')
+#	plt.grid(True)
+#	plt.show()
 
 
     def nplot(self):
@@ -47,11 +71,15 @@ class nyquist(gr.sync_block):
 	d1,d2,d3,d4=self.d.split(',')
 	inp = "s=poly(0,'s');h=syslin('c',("+str(a1)+"*s^3+"+str(a2)+"*s^2+"+str(a3)+"*s+"+str(a4)+")/("+str(b1)+"*s^3+"+str(b2)+"*s^2+"+str(b3)+"*s+"+str(b4)+"));h1=h*syslin('c',("+str(c1)+"*s^3+"+str(c2)+"*s^2+"+str(c3)+"*s+"+str(c4)+")/("+str(d1)+"*s^3+"+str(d2)+"*s^2+"+str(d3)+"*s+"+str(d4)+"));clf();    nyquist(h1)"
 	sciscipy.eval(inp)
-
+#	self.parent.Add(a)
+#	self.parent.GetTopLevelParent().Hide()
 
     def work(self, input_items, output_items):
 	"""
-        Leave this unimplemented
+        in0 = input_items[0]
+        out = output_items[0]
+        # <+signal processing here+>
+        out[:] = in0
 	"""
         return len(output_items[0])
 

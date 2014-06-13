@@ -4,57 +4,50 @@
   <key>nyquist_block_nyquist</key>
   <category>nyquist_block</category>
   <import>import nyquist</import>
-  <make>nyquist.nyquist(parent=self.GetWin())
+  <make>nyquist.nyquist()
 self.$(id).set_parameters($a,$b,$c,$d)
 </make>
   <callback></callback>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
   <param>
-    <name>Coefficients of h1 numerator</name>
+    <name>tf 1 numerator</name>
     <key>a</key>
     <value></value>
     <type>string</type>
   </param> 
   <param>
-    <name>Coefficients of h1 denominator</name>
+    <name>tf 1 denominator</name>
     <key>b</key>
     <value></value>
     <type>string</type>
   </param> 
   <param>
-    <name>Coefficients of h2 numerator</name>
+    <name>tf 2 numerator</name>
     <key>c</key>
     <value></value>
     <type>string</type>
   </param> 
   <param>
-    <name>Coefficients of h2 denominator</name>
+    <name>tf 2 denominator</name>
     <key>d</key>
     <value></value>
     <type>string</type>
   </param> 
 
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
+  
   <sink>
     <name>in</name>
     <type>float</type>
   </sink>
 
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
     <type>float</type>
   </source>
+  <doc>
+  Computes the Nyquist plot i.e Imaginary part versus Real part of the frequency response of the product of two transfer functions.
+
+  The inputs are the coefficients a third order transfer function.
+
+  Example: For the transfer function - (s^2+2*0.9*10*s+100)/(s^2+2*0.3*10.1*s+102.01), the numerator is of the form - 0,1,2*0.9*10,100 and the denominator is of the form - 0,1,2*0.3*10.1,102.01.
+  </doc>
 </block>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jun  9 18:14:51 2014</timestamp>
+  <timestamp>Fri Jun 13 11:41:47 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -53,7 +53,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 10)</value>
+      <value>(20, 342)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -76,7 +76,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(10, 170)</value>
+      <value>(29, 445)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -103,7 +103,42 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(984, 279)</value>
+      <value>(806, 183)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>nyquist_block_nyquist</key>
+    <param>
+      <key>id</key>
+      <value>nyquist_block_nyquist_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>a</key>
+      <value>0,1,2*0.9*10,100</value>
+    </param>
+    <param>
+      <key>b</key>
+      <value>0,1,2*0.3*10.1,102.01</value>
+    </param>
+    <param>
+      <key>c</key>
+      <value>0,1,2*0.1*15.1,228.01</value>
+    </param>
+    <param>
+      <key>d</key>
+      <value>0,1,2*0.9*15,225</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(455, 163)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -130,42 +165,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(279, 125)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>nyquist_block_nyquist</key>
-    <param>
-      <key>id</key>
-      <value>nyquist_block_nyquist_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>a</key>
-      <value>0,1,18,100</value>
-    </param>
-    <param>
-      <key>b</key>
-      <value>0,1,2*0.3*10.1,102.01</value>
-    </param>
-    <param>
-      <key>c</key>
-      <value>0,1,2*0.1*15.1,228.01</value>
-    </param>
-    <param>
-      <key>d</key>
-      <value>0,1,2*0.9*15,225</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(533, 168)</value>
+      <value>(209, 183)</value>
     </param>
     <param>
       <key>_rotation</key>

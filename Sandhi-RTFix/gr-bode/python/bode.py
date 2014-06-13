@@ -28,7 +28,8 @@ import matplotlib.pyplot as plt
 
 class bode(gr.sync_block):
     """
-    docstring for block bode
+    magnitude and phase of the frequency
+    response of a given transfer function
     """
     def __init__(self):
         gr.sync_block.__init__(self,
@@ -36,27 +37,17 @@ class bode(gr.sync_block):
             in_sig=[numpy.float32],
             out_sig=[numpy.float])
 
-    def set_parameters(self,a,b,c,d):
+    def set_parameters(self,a,b):
 	self.a=a
 	self.b=b
-#	self.c=c
-#	self.d=d
 	self.nplot()
 
     def nplot(self):
 	a1,a2,a3,a4=self.a.split(',')
 	b1,b2,b3,b4=self.b.split(',')
-#	c1,c2,c3,c4=self.c.split(',')	
-#	d1,d2,d3,d4=self.d.split(',')
-#	inp = "s=poly(0,'s');h=syslin('c',("+str(a1)+"*s^3+"+str(a2)+"*s^2+"+str(a3)+"*s+"+str(a4)+")/("+str(b1)+"*s^3+"+str(b2)+"*s^2+"+str(b3)+"*s+"+str(b4)+"));h1=h*syslin('c',("+str(c1)+"*s^3+"+str(c2)+"*s^2+"+str(c3)+"*s+"+str(c4)+")/("+str(d1)+"*s^3+"+str(d2)+"*s^2+"+str(d3)+"*s+"+str(d4)+"));clf();    bode(h,0.1,100)"
 	inp = "s=poly(0,'s');h=syslin('c',("+str(a1)+"*s^3+"+str(a2)+"*s^2+"+str(a3)+"*s+"+str(a4)+")/("+str(b1)+"*s^3+"+str(b2)+"*s^2+"+str(b3)+"*s+"+str(b4)+"));clf();bode(h,0.1,100)"
 	sciscipy.eval(inp)
 
     def work(self, input_items, output_items):
-	"""
-        in0 = input_items[0]
-        out = output_items[0]
-        # <+signal processing here+>
-        out[:] = in0
-	"""
-        return len(output_items[0])
+        #Leave this unimplemented
+	return len(output_items[0])

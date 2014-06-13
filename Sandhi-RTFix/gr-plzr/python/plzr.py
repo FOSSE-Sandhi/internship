@@ -35,8 +35,6 @@ class plzr(gr.sync_block):
     def set_parameters(self,a,b):
 		self.a=a
 		self.b=b
-	#	self.c=c
-	#	self.d=d
 		self.nplot()
 
     def nplot(self):	
@@ -46,10 +44,7 @@ class plzr(gr.sync_block):
 
     def work(self, input_items, output_items):
 	"""
-        in0 = input_items[0]
-        out = output_items[0]
-        # <+signal processing here+>
-        out[:] = in0
+	Leave this unimplemented.
 	"""
         return len(output_items[0])
 

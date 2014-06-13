@@ -1,29 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Jun 11 14:29:28 2014</timestamp>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>32000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(34, 260)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
+  <timestamp>Fri Jun 13 11:49:59 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -84,6 +61,29 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>32000</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(34, 260)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>gr_null_sink</key>
     <param>
       <key>id</key>
@@ -103,7 +103,34 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(535, 396)</value>
+      <value>(895, 244)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>bode_bode</key>
+    <param>
+      <key>id</key>
+      <value>bode_bode_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>a</key>
+      <value>0,1,2*0.9*10,100</value>
+    </param>
+    <param>
+      <key>b</key>
+      <value>0,1,2*0.3*10.1,102.01</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(515, 240)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -130,42 +157,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(179, 55)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>bode_bode</key>
-    <param>
-      <key>id</key>
-      <value>bode_bode_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>a</key>
-      <value>0,1,2*0.9*10,100</value>
-    </param>
-    <param>
-      <key>b</key>
-      <value>0,1,2*0.3*10.1,102.01</value>
-    </param>
-    <param>
-      <key>c</key>
-      <value></value>
-    </param>
-    <param>
-      <key>d</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(218, 204)</value>
+      <value>(295, 244)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -173,14 +165,14 @@
     </param>
   </block>
   <connection>
-    <source_block_id>bode_bode_0</source_block_id>
-    <sink_block_id>gr_null_sink_0</sink_block_id>
+    <source_block_id>gr_null_source_0</source_block_id>
+    <sink_block_id>bode_bode_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_null_source_0</source_block_id>
-    <sink_block_id>bode_bode_0</sink_block_id>
+    <source_block_id>bode_bode_0</source_block_id>
+    <sink_block_id>gr_null_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

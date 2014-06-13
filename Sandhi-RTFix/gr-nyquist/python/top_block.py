@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Tue Jun 10 20:09:42 2014
+# Generated: Fri Jun 13 11:50:23 2014
 ##################################################
 
 from gnuradio import eng_notation
@@ -27,8 +27,8 @@ class top_block(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.nyquist_block_nyquist_0 = nyquist.nyquist(parent=self.GetWin())
-		self.nyquist_block_nyquist_0.set_parameters("0,1,18,100","0,1,2*0.3*10.1,102.01","0,1,2*0.1*15.1,228.01","0,1,2*0.9*15,225")
+		self.nyquist_block_nyquist_0 = nyquist.nyquist()
+		self.nyquist_block_nyquist_0.set_parameters("0,1,2*0.9*10,100","0,1,2*0.3*10.1,102.01","0,1,2*0.1*15.1,228.01","0,1,2*0.9*15,225")
 		self.gr_null_source_0 = gr.null_source(gr.sizeof_float*1)
 		self.gr_null_sink_0 = gr.null_sink(gr.sizeof_float*1)
 

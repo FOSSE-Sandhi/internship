@@ -5,26 +5,21 @@
   <category>bode</category>
   <import>import bode</import>
   <make>bode.bode()
-self.$(id).set_parameters($a,$b,$c,$d)
+self.$(id).set_parameters($a,$b)
 </make>
-  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
-       Sub-nodes:
-       * name
-       * key (makes the value accessible as $keyname, e.g. in the make node)
-       * type -->
   <param>
-    <name>Transfer function 1 numerator</name>
+    <name>tf 1 numerator</name>
     <key>a</key>
     <value></value>
     <type>string</type>
   </param>
   <param>
-    <name>Transfer function 1 denominator</name>
+    <name>tf 1 denominator</name>
     <key>b</key>
     <value></value>
     <type>string</type>
   </param>
-  <param>
+<!--  <param>
     <name>Transfer function 2 numerator</name>
     <key>c</key>
     <value></value>
@@ -35,25 +30,23 @@ self.$(id).set_parameters($a,$b,$c,$d)
     <key>d</key>
     <value></value>
     <type>string</type>
-  </param>
+  </param> -->
 
-  <!-- Make one 'sink' node per input. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
   <sink>
     <name>in</name>
     <type>float</type>
   </sink>
 
-  <!-- Make one 'source' node per output. Sub-nodes:
-       * name (an identifier for the GUI)
-       * type
-       * vlen
-       * optional (set to 1 for optional inputs) -->
   <source>
     <name>out</name>
     <type>float</type>
   </source>
+  <doc>
+	Computes the bode plot i.e. the magnitude and phase of the frquency response of the given trasnfer function.
+	
+ 	The inputs are the coefficients a third order transfer function.
+
+	Example: For the transfer function - (s^2+2*0.9*10*s+100)/(s^2+2*0.3*10.1*s+102.01), the numerator is of the form - 0,1,2*0.9*10,100 and the denominator is of the form - 0,1,2*0.3*10.1,102.01.
+
+  </doc>
 </block>
