@@ -29,6 +29,42 @@ class top_block(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
+		_f_sizer = wx.BoxSizer(wx.VERTICAL)
+                self._f_text_box = forms.text_box(
+                        parent=self.GetWin(),
+                        sizer=_f_sizer,
+                        value=self.f,
+                        callback=self.set_f,
+                        label="f",
+                        converter=forms.float_converter(),
+                        proportion=0,
+                )
+                self._f_slider = forms.slider(
+                        parent=self.GetWin(),
+                        sizer=_f_sizer,
+                        value=self.f,
+                        callback=self.set_f,
+                        minimum=10,
+                        maximum=80,
+			num_steps=100,
+                        style=wx.SL_HORIZONTAL,
+                        cast=float,
+                        proportion=1,
+                )
+                self.Add(_f_sizer)
+                self.scigen_generic_0 = scigen.generic()
+                self.scigen_generic_0.set_parameters("sin", 1)
+
+                self.plot_sink_0 = plot_sink.plot_sink_f(
+                        self.GetWin(),
+                        title="Scope Plot",
+                        vlen=1,
+                        decim=1,
+                )
+                self.Add(self.plot_sink_0.win)
+                self.gr_sig_source_x_0 = gr.sig_source_f(samp_rate, gr.GR_COS_WAVE, 10, f, 0)
+		
+	
 		self.sbhs_controller_0 = gr_controller.sbhs_controller()
 		self.sbhs_controller_0.set_parameters(1, 1, 1, 1, 1, 1)
 		    
