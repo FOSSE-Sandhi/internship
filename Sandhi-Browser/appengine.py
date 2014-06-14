@@ -15,29 +15,13 @@ class MainPage(webapp2.RequestHandler):
 	print "fan: ",fan
 	#print self.request.remote_addr
 	vals = urllib.urlencode({'heat':heat,'fan':fan})
-	url = urllib.urlopen("http://localhost:8080/sign",vals)
+	try:
+		url = urllib.urlopen("http://localhost:9000",vals)
+	except:
+		pass
 	#Hardcoded to sleep for 2 seconds : change later if necessary
 	time.sleep(2)
 	self.redirect("/response")
-
-
-class Server(webapp2.RequestHandler):
-    heat = 0
-    fan = 0
-    def get(self):
-	global heat
-	global fan
-	self.response.headers['Content-Type'] = 'text/plain'
-	res = [heat,fan]
-	#print "Server get:",res
-	self.response.write(json.dumps(res))
-
-    def post(self):
-	global heat
-	global fan
-	heat = int(cgi.escape(self.request.get('heat')))
-	fan = int(cgi.escape(self.request.get('fan')))
-	#print "Heat & fan in server post:",heat,fan	
 
 
 class Response(webapp2.RequestHandler):
@@ -57,7 +41,6 @@ class Response(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/sign',Server),
     ('/response',Response)
 ], debug=True)
 
