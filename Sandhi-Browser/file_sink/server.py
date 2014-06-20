@@ -5,12 +5,14 @@ import urllib
 import subprocess
 import os
 import gviz_api
+import scipy
 import time
 
 HOST_NAME = "localhost"
 PORT_NUMBER = 9000
 PATH_TOP_BLOCK = "/home/anoop/IITB/gr-howto2/python/top_block.py"
-PATH_FLOW_GRAPH = "/home/anoop/IITB/gr-howto2/python/Flow.png"
+PATH_FLOW_GRAPH = "/home/anoop/IITB/gr-howto2/python/Flow_fs.png"
+OUT_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/output"
 NUM_VALUES = 50
 
 class Serve(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -32,19 +34,12 @@ class Serve(BaseHTTPServer.BaseHTTPRequestHandler):
 			xmlproc = subprocess.Popen(param_list)	
 			xmlproc.wait()
 			process = subprocess.Popen([PATH_TOP_BLOCK], stdout=subprocess.PIPE)
-
-		        #To eliminate the first two lines
-		        process.stdout.readlines(2)
-			
-			#value = process.stdout.readlines(NUM_VALUES)
+			time.sleep(2)
+			process.kill()
+			arr = scipy.fromfile(OUT_FILE_PATH,dtype=scipy.float32,count=NUM_VALUES)
 			value = []
 			for i in range(NUM_VALUES):
-	                        val = process.stdout.readline().strip()
-        	                val = val.split(" ")[-1]
-                	        val = val.strip("[")
-                        	val = val.strip("]")
-				value.append([str(i),float(val)])
-			process.kill()			
+				value.append([str(i),float(arr[i])])
 			description = [('Output number','string'),('Result','number')]
 			table = gviz_api.DataTable(description)
 			path_flow_graph = PATH_FLOW_GRAPH

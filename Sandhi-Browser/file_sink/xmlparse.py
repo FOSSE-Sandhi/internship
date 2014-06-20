@@ -4,8 +4,8 @@ import xml.dom
 import sys
 import os
 
-SRC_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/howto2.grc"
-DST_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/test_pl.grc"
+SRC_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/howto2_fs.grc"
+DST_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/test_fs.grc"
 DST_FOLDER = "/home/anoop/IITB/gr-howto2/python"
 
 class Parser:
