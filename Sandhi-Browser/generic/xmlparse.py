@@ -4,20 +4,16 @@ import xml.dom
 import sys
 import os
 
-#SRC_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/howto2_fs.grc"
-#DST_FILE_PATH = "/home/anoop/IITB/gr-howto2/python/test_fs.grc"
-#DST_FOLDER = "/home/anoop/IITB/gr-howto2/python"
-
-DIR_PATH = "/home/anoop/IITB/gr-howto2/python"
-
 class Parser:
-	def __init__(self,sink):
-		if sink == "file sink":		
-			self.xmldoc = minidom.parse(DIR_PATH + "/howto2_fs.grc")
-		elif sink == "plot sink":
-			self.xmldoc = minidom.parse(DIR_PATH + "/howto2.grc")
-	
-	def process(self,sink,cmd_args):
+	def __init__(self,grc_file):
+		self.xmldoc = minidom.parse(grc_file)
+		self.directory = ""
+		pathsplit = grc_file.split("/")
+		for i in range(1,len(pathsplit)-1):
+			self.directory += "/"+pathsplit[i]
+		#print "Dir:", self.directory
+			
+	def process(self,grc_file,cmd_args):
 		'''
 		Main processing and manipulation of .grc file happens here.
 		@param cmd_ags: Command line arguements passed - These are the 
@@ -26,6 +22,7 @@ class Parser:
 		print "Building flow graph...",
 		first_child = self.xmldoc.firstChild
 		lst = first_child.getElementsByTagName("key")
+		#print cmd_args
 		keys = map(lambda x: x.split("=")[0], cmd_args)
                 values = map(lambda x: x.split("=")[1], cmd_args)
 		table = zip(keys, values)
@@ -41,18 +38,14 @@ class Parser:
 			new_child = self.xmldoc.createTextNode(table[i.firstChild.data])
 			value_node[0].replaceChild(new_child,old_child)
 
+		dst_file = self.directory + "/testps.grc"
 		#write updated xml to a new file
-		if sink == "file sink":
-			dst_file = DIR_PATH + "/test_fs.grc"
-		elif sink == "plot sink":
-			dst_file = DIR_PATH + "/test_ps.grc"
-		
 		fp = open(dst_file,"w")
 		fp.write(self.xmldoc.toxml())
 		fp.close()
 		print "Done"
 		print "Generating top block...",
-		os.system("grcc "+dst_file+" -d "+DIR_PATH)
+		os.system("grcc "+dst_file+" -d "+self.directory)
 		print "Done"
 
 if __name__ == "__main__":
