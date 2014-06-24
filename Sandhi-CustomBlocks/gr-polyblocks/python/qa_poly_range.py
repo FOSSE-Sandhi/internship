@@ -32,13 +32,13 @@ class qa_poly_range (gr_unittest.TestCase):
 
     def test_001_t (self):
         # set up fg
-        src0 = gr.vector_source_f(numpy.arange(0,3.1415,0.01))
+        #src0 = gr.vector_source_f(numpy.arange(0,3.1415,0.01))
 	sqr = poly_range()
 	sqr.set_parameters("10 -2*x + 15*x^2 + x^3","-40:0.01:40","x","y")
-
-	dst = gr.vector_sink_f()
-	self.tb.connect(src0,sqr)
-	self.tb.connect(sqr,dst)
+	self.tb.connect(sqr,sqr)
+	#dst = gr.vector_sink_f()
+	#self.tb.connect(src0,sqr)
+	#self.tb.connect(sqr,dst)
 	self.tb.run ()
         # check data
 

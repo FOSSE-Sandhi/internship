@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Sat Jun  7 12:15:20 2014
+# Generated: Mon Jun 16 13:50:52 2014
 ##################################################
 
 from gnuradio import eng_notation
@@ -11,7 +11,8 @@ from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
-import scifile
+from sbhs import plot_sink
+import scifile_flow
 import wx
 
 class top_block(grc_wxgui.top_block_gui):
@@ -27,17 +28,23 @@ class top_block(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.scifile_generic_0 = scifile.scifile()
-		self.scifile_generic_0.set_parameters("~/Downloads/test.sci", 1)
+		self.scifile_flow_0 = scifile_flow.scifile_flow()
+		self.scifile_flow_0.set_parameters("/home/rishabh/Downloads/test.sci", 1)
 		    
+		self.plot_sink_0 = plot_sink.plot_sink_f(
+			self.GetWin(),
+			title="Scope Plot",
+			vlen=1,
+			decim=1,
+		)
+		self.Add(self.plot_sink_0.win)
 		self.gr_null_source_0 = gr.null_source(gr.sizeof_float*1)
-		self.gr_null_sink_0 = gr.null_sink(gr.sizeof_float*1)
 
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.gr_null_source_0, 0), (self.scifile_generic_0, 0))
-		self.connect((self.scifile_generic_0, 0), (self.gr_null_sink_0, 0))
+		self.connect((self.gr_null_source_0, 0), (self.scifile_flow_0, 0))
+		self.connect((self.scifile_flow_0, 0), (self.plot_sink_0, 0))
 
 
 	def get_samp_rate(self):

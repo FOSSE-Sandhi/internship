@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Jun 11 14:49:13 2014</timestamp>
+  <timestamp>Tue Jun 24 11:58:16 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -84,33 +84,6 @@
     </param>
   </block>
   <block>
-    <key>gr_null_source</key>
-    <param>
-      <key>id</key>
-      <value>gr_null_source_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(145, 135)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>poly_range</key>
     <param>
       <key>id</key>
@@ -149,55 +122,12 @@
       <value>"Y"</value>
     </param>
     <param>
-      <key>window</key>
-      <value>1</value>
-    </param>
-    <param>
       <key>_coordinate</key>
-      <value>(333, 99)</value>
+      <value>(416, 136)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
   </block>
-  <block>
-    <key>gr_null_sink</key>
-    <param>
-      <key>id</key>
-      <value>gr_null_sink_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(606, 133)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <connection>
-    <source_block_id>poly_range_0</source_block_id>
-    <sink_block_id>gr_null_sink_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_null_source_0</source_block_id>
-    <sink_block_id>poly_range_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
 </flow_graph>

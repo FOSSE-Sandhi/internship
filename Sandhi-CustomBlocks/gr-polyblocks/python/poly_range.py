@@ -28,8 +28,8 @@ class poly_range(gr.sync_block):
     def __init__(self):
         gr.sync_block.__init__(self,
             name="poly_range",
-            in_sig=[numpy.float32],
-            out_sig=[numpy.float32])
+            in_sig = None,
+            out_sig = None )
 
 
     def set_parameters(self,poly,x_range,xlabel,ylabel):
@@ -37,12 +37,14 @@ class poly_range(gr.sync_block):
 	self.x_range = x_range
 	self.xlabel = xlabel
 	self.ylabel = ylabel
+	self.plot_poly()
 
+    def plot_poly(self):
+	from polyrange_sci import polyrange
+	polyrange(self.poly,self.x_range,self.xlabel,self.ylabel)
+    '''
     def work(self, input_items, output_items):
         in0 = input_items[0]
         out = output_items[0]
-        from polyrange_sci import polyrange
-	# <+signal processing here+>
-        polyrange(self.poly,self.x_range,self.xlabel,self.ylabel)
         return len(output_items[0])
-
+    '''
