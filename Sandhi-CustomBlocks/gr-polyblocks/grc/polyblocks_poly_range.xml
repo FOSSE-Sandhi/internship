@@ -101,5 +101,5 @@ eg: "[-30:0.01:30]"
 Further, input the X-label and the Y-label for the plot in corresponding fields.
 
 Note that all the parameters must be written within the quotes.
-    <doc>
-<block>
+    </doc>
+</block>

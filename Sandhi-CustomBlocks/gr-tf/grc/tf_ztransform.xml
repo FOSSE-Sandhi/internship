@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<block>
+  <name>ztransform</name>
+  <key>tf_ztransform</key>
+  <category>controls</category>
+  <import>import ztransform</import>
+  <make>ztransform.ztransform()
+self.$(id).set_parameters($num,$den,$window)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+    <param>
+        <name>IO Type</name>
+        <key>type</key>
+        <type>enum</type>
+        <option><name>FC32_FC32</name><key>fc32_fc32</key></option>
+        <option><name>F32_F32</name><key>f32_f32</key></option>
+        <option><name>SC32_SC32</name><key>sc32_sc32</key></option>
+        <option><name>S32_S32</name><key>s32_s32</key></option>
+        <option><name>SC16_SC16</name><key>sc16_sc16</key></option>
+        <option><name>S16_S16</name><key>s16_s16</key></option>
+        <option><name>SC8_SC8</name><key>sc8_sc8</key></option>
+        <option><name>S8_S8</name><key>s8_s8</key></option>
+    </param>
+
+
+  <param>
+    <name>Numerator Array</name>
+    <key>num</key>
+    <value>""</value>
+    <type>string</type>
+  </param>
+
+  <param>
+    <name>Denominator Array</name>
+    <key>den</key>
+    <value>""</value>
+    <type>string</type>
+  </param>
+
+  <param>
+     <name>Window</name>
+     <key>window</key>
+     <value>1</value>
+     <type>int</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>$(str($type).split('_')[0])</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>$(str($type).split('_')[1])</type>
+  </source>
+</block>
