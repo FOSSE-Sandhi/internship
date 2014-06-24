@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Jun 21 17:01:01 2014</timestamp>
+  <timestamp>Tue Jun 24 11:13:24 2014</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -84,6 +84,64 @@
     </param>
   </block>
   <block>
+    <key>gr_null_source</key>
+    <param>
+      <key>id</key>
+      <value>gr_null_source_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(158, 634)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>sci_python_sci_py</key>
+    <param>
+      <key>id</key>
+      <value>sci_python_sci_py_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>path</key>
+      <value>"/home/rishabh/Downloads/test.sci"</value>
+    </param>
+    <param>
+      <key>window</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>var_name</key>
+      <value>"y"</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(391, 636)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>plot_sink</key>
     <param>
       <key>id</key>
@@ -110,6 +168,10 @@
       <value>1</value>
     </param>
     <param>
+      <key>gsz</key>
+      <value>1000</value>
+    </param>
+    <param>
       <key>grid_pos</key>
       <value></value>
     </param>
@@ -119,61 +181,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(604, 757)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_null_source</key>
-    <param>
-      <key>id</key>
-      <value>gr_null_source_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(210, 657)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>sci_python_sci_py</key>
-    <param>
-      <key>id</key>
-      <value>sci_python_sci_py_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>path</key>
-      <value>"/home/rishabh/Downloads/test.sci"</value>
-    </param>
-    <param>
-      <key>window</key>
-      <value>900</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(390, 631)</value>
+      <value>(621, 696)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -181,14 +189,14 @@
     </param>
   </block>
   <connection>
-    <source_block_id>sci_python_sci_py_0</source_block_id>
-    <sink_block_id>plot_sink_0</sink_block_id>
+    <source_block_id>gr_null_source_0</source_block_id>
+    <sink_block_id>sci_python_sci_py_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_null_source_0</source_block_id>
-    <sink_block_id>sci_python_sci_py_0</sink_block_id>
+    <source_block_id>sci_python_sci_py_0</source_block_id>
+    <sink_block_id>plot_sink_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

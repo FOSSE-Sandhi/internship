@@ -1,5 +1,12 @@
-<testsuite errors="0" failures="0" name="unittest.suite.TestSuite" tests="1" time="65.189">
-  <testcase classname="__main__.qa_sci_py" name="test_001_t" time="65.1885"></testcase>
+<testsuite errors="1" failures="0" name="unittest.suite.TestSuite" tests="1" time="0.001">
+  <testcase classname="__main__.qa_sci_py" name="test_001_t" time="0.0013">
+    <error type="exceptions.TypeError">set_parameters() takes exactly 4 arguments (3 given)
+  File "/usr/lib/python2.7/unittest/case.py", line 327, in run
+    testMethod()
+  File "qa_sci_py.py", line 37, in test_001_t
+    sqr.set_parameters("/home/rishabh/Downloads/test.sci",1001)
+    </error>
+  </testcase>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

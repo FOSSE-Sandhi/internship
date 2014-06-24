@@ -5,7 +5,7 @@
   <category>scigen_flowgraph</category>
   <import>import sci_py</import>
   <make>sci_py.sci_py()
-self.$(id).set_parameters($path,$window)</make>
+self.$(id).set_parameters($path,$window,$var_name)</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name
@@ -23,7 +23,12 @@ self.$(id).set_parameters($path,$window)</make>
     <value>1</value>
     <type>int</type>
   </param>
-
+  <param>
+     <name>Name of Scilab Variable</name>
+     <key>var_name</key>
+     <value>""</value>
+     <type>string</type>
+   </param>
 
   <!-- Make one 'sink' node per input. Sub-nodes:
        * name (an identifier for the GUI)
