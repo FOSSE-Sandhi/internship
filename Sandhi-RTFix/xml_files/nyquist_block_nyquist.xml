@@ -9,13 +9,13 @@ self.$(id).set_parameters($a,$b,$c,$d)
 </make>
   <callback></callback>
   <param>
-    <name>tf 1 numerator</name>
+    <name>tf  numerator</name>
     <key>a</key>
     <value></value>
     <type>string</type>
   </param> 
   <param>
-    <name>tf 1 denominator</name>
+    <name>tf  denominator</name>
     <key>b</key>
     <value></value>
     <type>string</type>
@@ -33,7 +33,7 @@ self.$(id).set_parameters($a,$b,$c,$d)
     <type>string</type>
   </param> 
 
-  
+ <!-- 
   <sink>
     <name>in</name>
     <type>float</type>
@@ -42,12 +42,9 @@ self.$(id).set_parameters($a,$b,$c,$d)
   <source>
     <name>out</name>
     <type>float</type>
-  </source>
+  </source>-->
   <doc>
   Computes the Nyquist plot i.e Imaginary part versus Real part of the frequency response of the product of two transfer functions.
 
-  The inputs are the coefficients a third order transfer function.
-
-  Example: For the transfer function - (s^2+2*0.9*10*s+100)/(s^2+2*0.3*10.1*s+102.01), the numerator is of the form - 0,1,2*0.9*10,100 and the denominator is of the form - 0,1,2*0.3*10.1,102.01.
   </doc>
 </block>

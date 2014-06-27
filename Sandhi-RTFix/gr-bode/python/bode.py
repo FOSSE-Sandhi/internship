@@ -43,9 +43,7 @@ class bode(gr.sync_block):
 	self.nplot()
 
     def nplot(self):
-	a1,a2,a3,a4=self.a.split(',')
-	b1,b2,b3,b4=self.b.split(',')
-	inp = "s=poly(0,'s');h=syslin('c',("+str(a1)+"*s^3+"+str(a2)+"*s^2+"+str(a3)+"*s+"+str(a4)+")/("+str(b1)+"*s^3+"+str(b2)+"*s^2+"+str(b3)+"*s+"+str(b4)+"));clf();bode(h,0.1,100)"
+	inp = "s=poly(0,'s');h=syslin('c',("+self.a+")/("+self.b+"));clf();bode(h,0.1,100)"
 	sciscipy.eval(inp)
 
     def work(self, input_items, output_items):
