@@ -12,14 +12,14 @@ class _plot_sink_base(gr.hier_block2, threading.Thread):
 	The thread polls the message queue for values and writes to matplotsink callback
 	"""
 
-	def __init__(self, parent, title, vlen, decim,gsz):
+	def __init__(self, parent, title, vlen, decim,gsz,zoom):
 		self._vlen = vlen
 		self._parent = parent
 		self._title = title
 		print "Initing block: %s" % title
 
 		self.plotQueue = Queue.Queue()
-		self.win = matplotsink.matplotsink(parent,title, self.plotQueue,gsz)		
+		self.win = matplotsink.matplotsink(parent,title, self.plotQueue,gsz,zoom)		
 
 		self._item_size = self._size*self._vlen
 		#init hier block

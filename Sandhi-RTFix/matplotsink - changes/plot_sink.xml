@@ -16,6 +16,7 @@ plot_sink.plot_sink_$(type.fcn)(
 	vlen=$vlen,
 	decim=$decim,
 	gsz=$gsz,
+	zoom=$zoom,
 )
 #if not $grid_pos()
 $(parent).Add(self.$(id).win)
@@ -76,6 +77,12 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<name>Graph size</name>
 		<key>gsz</key>
 		<value>50</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>History Required</name>
+		<key>zoom</key>
+		<value>0</value>
 		<type>int</type>
 	</param>
 

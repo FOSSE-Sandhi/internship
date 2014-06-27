@@ -76,14 +76,14 @@ class DataGen(object):
 
 class matplotsink(wx.Panel):
   
-    def __init__(self, parent, title, queue,gsz):
+    def __init__(self, parent, title, queue,gsz,zoom):
          wx.Panel.__init__(self, parent, wx.SIMPLE_BORDER)
         
 	 self.gsz = gsz
          self.parent = parent
          self.title = title
          self.q = queue
-
+	 self.zoom=zoom
          self.paused = False
        
 #        self.create_menu()
@@ -188,25 +188,67 @@ class matplotsink(wx.Panel):
          """ Redraws the plot
          """
 	 if len(list(self.q.queue))>1 and not self.paused:
-        	 
-	         if self.cb_grid.IsChecked():
-	             self.axes.grid(True, color='gray')
-	         else:
-        	     self.axes.grid(False)
 
-       		 # Using setp here is convenient, because get_xticklabels
-        	 # returns a list over which one needs to explicitly 
-	         # iterate, and setp already handles this.
+             if self.zoom:
+                 xmax = len(list(self.q.queue)) if len(list(self.q.queue)) > 50 else 50
+               
+                 xmin = xmax - 50
+                 # for ymin and ymax, find the minimal and maximal values
+                 # in the data set and add a mininal margin.
+                 # 
+                 # note that it's easy to change this scheme to the 
+                 # minimal/maximal value in the current display, and not
+                 # the whole data set.
+                 # 
+                 ymin = round(min(list(self.q.queue)), 0) - 1
+            
+                 ymax = round(max(list(self.q.queue)), 0) + 1
 
-	         pylab.setp(self.axes.get_xticklabels(), 
-        	 visible=self.cb_xlab.IsChecked())
-		 
-	         self.plot_data.set_xdata(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end])
-        	 self.plot_data.set_ydata(np.array(list(self.q.queue))[self.i_start:self.i_end])
-		 self.axes.set_xlim(min(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end]),max(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end]))
-	  	 self.axes.set_ylim(min(np.array(list(self.q.queue))[self.i_start:self.i_end]),max(np.array(list(self.q.queue))[self.i_start:self.i_end]))
-		 
-		 self.canvas.draw()
+                 self.axes.set_xbound(lower=xmin, upper=xmax)
+                 self.axes.set_ybound(lower=ymin, upper=ymax)
+           
+                 # anecdote: axes.grid assumes b=True if any other flag is
+                 # given even if b is set to False.
+                 # so just passing the flag into the first statement won't
+                 # work.
+                 #
+                 if self.cb_grid.IsChecked():
+                     self.axes.grid(True, color='gray')
+                 else:
+                     self.axes.grid(False)
+
+                 # Using setp here is convenient, because get_xticklabels
+                 # returns a list over which one needs to explicitly 
+                 # iterate, and setp already handles this.
+                 #  
+                 pylab.setp(self.axes.get_xticklabels(), 
+                 visible=self.cb_xlab.IsChecked())
+
+            
+                 self.plot_data.set_xdata(np.arange(len(list(self.q.queue))))
+                 self.plot_data.set_ydata(np.array(list(self.q.queue)))
+                 self.canvas.draw()
+        	
+             else: 
+    	         if self.cb_grid.IsChecked():
+    	             self.axes.grid(True, color='gray')
+    	         else:
+            	     self.axes.grid(False)
+
+           		 # Using setp here is convenient, because get_xticklabels
+            	 # returns a list over which one needs to explicitly 
+    	         # iterate, and setp already handles this.
+
+    	         pylab.setp(self.axes.get_xticklabels(), 
+            	 visible=self.cb_xlab.IsChecked())
+    		 
+    	         self.plot_data.set_xdata(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end])
+            	 self.plot_data.set_ydata(np.array(list(self.q.queue))[self.i_start:self.i_end])
+    		 self.axes.set_xlim(min(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end]),max(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end]))
+    #		 if self.zoom:
+    	  	 self.axes.set_ylim(min(np.array(list(self.q.queue))),max(np.array(list(self.q.queue))))
+    		 
+    		 self.canvas.draw()
 
 
     

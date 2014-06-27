@@ -73,69 +73,23 @@ class DataGen(object):
             self.data += delta
 
 
-class BoundControlBox(wx.Panel):
-    """ A static box with a couple of radio buttons and a text
-        box. Allows to switch between an automatic mode and a 
-        manual mode with an associated value.
-    """
-    def __init__(self, parent, ID, label, initval):
-        wx.Panel.__init__(self, parent, ID)
-        
-        self.value = initval
-        
-        box = wx.StaticBox(self, -1, label)
-        sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
-        
-        self.radio_auto = wx.RadioButton(self, -1, 
-            label="Auto", style=wx.RB_GROUP)
-        self.radio_manual = wx.RadioButton(self, -1,
-            label="Manual")
-        self.manual_text = wx.TextCtrl(self, -1, 
-            size=(35,-1),
-            value=str(initval),
-            style=wx.TE_PROCESS_ENTER)
-        
-        self.Bind(wx.EVT_UPDATE_UI, self.on_update_manual_text, self.manual_text)
-        self.Bind(wx.EVT_TEXT_ENTER, self.on_text_enter, self.manual_text)
-        
-        manual_box = wx.BoxSizer(wx.HORIZONTAL)
-        manual_box.Add(self.radio_manual, flag=wx.ALIGN_CENTER_VERTICAL)
-        manual_box.Add(self.manual_text, flag=wx.ALIGN_CENTER_VERTICAL)
-        
-        sizer.Add(self.radio_auto, 0, wx.ALL, 10)
-        sizer.Add(manual_box, 0, wx.ALL, 10)
-        
-        self.SetSizer(sizer)
-        sizer.Fit(self)
-    
-    def on_update_manual_text(self, event):
-        self.manual_text.Enable(self.radio_manual.GetValue())
-    
-    def on_text_enter(self, event):
-        self.value = self.manual_text.GetValue()
-    
-    def is_auto(self):
-        return self.radio_auto.GetValue()
-        
-    def manual_value(self):
-        return self.value
 
 class matplotsink(wx.Panel):
   
-    def __init__(self, parent, title, queue):
+    def __init__(self, parent, title, queue,gsz,zoom):
          wx.Panel.__init__(self, parent, wx.SIMPLE_BORDER)
         
-
+     self.gsz = gsz
          self.parent = parent
          self.title = title
          self.q = queue
-
+     self.zoom=zoom
          self.paused = False
        
 #        self.create_menu()
 #        self.create_status_bar()
          self.create_main_panel()
-	 
+     
 
     def create_menu(self):
         self.menubar = wx.MenuBar()
@@ -155,11 +109,10 @@ class matplotsink(wx.Panel):
 
         self.init_plot()
         self.canvas = FigCanvas(self.panel, -1, self.fig)
-
-        self.xmin_control = BoundControlBox(self.panel, -1, "X min", 0)
-        self.xmax_control = BoundControlBox(self.panel, -1, "X max", 50)
-        self.ymin_control = BoundControlBox(self.panel, -1, "Y min", 0)
-        self.ymax_control = BoundControlBox(self.panel, -1, "Y max", 100)
+    self.scroll_range = 400
+    self.canvas.SetScrollbar(wx.HORIZONTAL,0,5,self.scroll_range)
+    self.canvas.Bind(wx.EVT_SCROLLWIN,self.OnScrollEvt)
+    
         
         self.pause_button = wx.Button(self.panel, -1, "Pause")
         self.Bind(wx.EVT_BUTTON, self.on_pause_button, self.pause_button)
@@ -184,34 +137,32 @@ class matplotsink(wx.Panel):
         self.hbox1.AddSpacer(10)
         self.hbox1.Add(self.cb_xlab, border=5, flag=wx.ALL | wx.ALIGN_CENTER_VERTICAL)
         
-        self.hbox2 = wx.BoxSizer(wx.HORIZONTAL)
-        self.hbox2.Add(self.xmin_control, border=5, flag=wx.ALL)
-        self.hbox2.Add(self.xmax_control, border=5, flag=wx.ALL)
-        self.hbox2.AddSpacer(24)
-        self.hbox2.Add(self.ymin_control, border=5, flag=wx.ALL)
-        self.hbox2.Add(self.ymax_control, border=5, flag=wx.ALL)
         
         self.vbox = wx.BoxSizer(wx.VERTICAL)
         self.vbox.Add(self.canvas, 1, flag=wx.LEFT | wx.TOP | wx.GROW)        
         self.vbox.Add(self.hbox1, 0, flag=wx.ALIGN_LEFT | wx.TOP)
-        self.vbox.Add(self.hbox2, 0, flag=wx.ALIGN_LEFT | wx.TOP)
         
         self.panel.SetSizer(self.vbox)
         self.vbox.Fit(self)
-	self.ani=animation.FuncAnimation(self.fig,self.draw_plot,interval=100)
+    self.ani=animation.FuncAnimation(self.fig,self.draw_plot,interval=100)
+    
+    def OnScrollEvt(self,event):
+    self.i_start = event.GetPosition()
+    self.i_end =  self.i_window + event.GetPosition()
+    self.draw_plot(0)
     
     def create_status_bar(self):
         self.statusbar = self.CreateStatusBar()
 
     def draw_test(self,event):
-	self.xar=np.arange(len(self.q.queue))
+    self.xar=np.arange(len(self.q.queue))
         self.yar=np.array(self.q.queue)
-	self.axes.plot(self.xar,self.yar)
+    self.axes.plot(self.xar,self.yar)
 
     def init_plot(self):
         self.dpi = 100
- 	self.fig = Figure((3.0, 3.0), dpi=self.dpi)
-        self.fig.set_size_inches(3.0,3.0)
+    self.fig = Figure((3.0, 3.0), dpi=self.dpi)
+        self.fig.set_size_inches(7.0,4.0)
         self.fig.set_dpi(self.dpi)
 
         self.axes = self.fig.add_subplot(111)
@@ -220,7 +171,9 @@ class matplotsink(wx.Panel):
         
         pylab.setp(self.axes.get_xticklabels(), fontsize=8)
         pylab.setp(self.axes.get_yticklabels(), fontsize=8)
-
+    self.i_window = self.gsz
+    self.i_start = 0
+    self.i_end = self.i_start + self.i_window
         # plot the data as a line series, and save the reference 
         # to the plotted line series
         #
@@ -234,61 +187,80 @@ class matplotsink(wx.Panel):
     def draw_plot(self,event):
          """ Redraws the plot
          """
-         # when xmin is on auto, it "follows" xmax to produce a 
-         # sliding window effect. therefore, xmin is assigned after
-         # xmax.
-         #
-	 if len(list(self.q.queue))>1 and not self.paused:
-       		 if self.xmax_control.is_auto():
-        	     xmax = len(list(self.q.queue)) if len(list(self.q.queue)) > 50 else 50
-	         else:
-	             xmax = int(self.xmax_control.manual_value())
+     if len(list(self.q.queue))>1 and not self.paused:
+
+             if self.zoom:
+                 if self.xmax_control.is_auto():
+                     xmax = len(list(self.q.queue)) if len(list(self.q.queue)) > 50 else 50
+                 else:
+                     xmax = int(self.xmax_control.manual_value())
+               
+                 if self.xmin_control.is_auto():            
+                     xmin = xmax - 50
+                 else:
+                     xmin = int(self.xmin_control.manual_value())
+                 # for ymin and ymax, find the minimal and maximal values
+                 # in the data set and add a mininal margin.
+                 # 
+                 # note that it's easy to change this scheme to the 
+                 # minimal/maximal value in the current display, and not
+                 # the whole data set.
+                 # 
+                 if self.ymin_control.is_auto():
+                     ymin = round(min(list(self.q.queue)), 0) - 1
+                 else:
+                     ymin = int(self.ymin_control.manual_value())
+            
+                 if self.ymax_control.is_auto():
+                     ymax = round(max(list(self.q.queue)), 0) + 1
+                 else:
+                     ymax = int(self.ymax_control.manual_value())
+
+                 self.axes.set_xbound(lower=xmin, upper=xmax)
+                 self.axes.set_ybound(lower=ymin, upper=ymax)
            
-	         if self.xmin_control.is_auto():            
-        	     xmin = xmax - 50
-	         else:
-	             xmin = int(self.xmin_control.manual_value())
-	         # for ymin and ymax, find the minimal and maximal values
-	         # in the data set and add a mininal margin.
-	         # 
-	         # note that it's easy to change this scheme to the 
-	         # minimal/maximal value in the current display, and not
-	         # the whole data set.
-	         # 
-	         if self.ymin_control.is_auto():
-        	     ymin = round(min(list(self.q.queue)), 0) - 1
-	         else:
-        	     ymin = int(self.ymin_control.manual_value())
-        
-	         if self.ymax_control.is_auto():
-	             ymax = round(max(list(self.q.queue)), 0) + 1
-	         else:
-	             ymax = int(self.ymax_control.manual_value())
+                 # anecdote: axes.grid assumes b=True if any other flag is
+                 # given even if b is set to False.
+                 # so just passing the flag into the first statement won't
+                 # work.
+                 #
+                 if self.cb_grid.IsChecked():
+                     self.axes.grid(True, color='gray')
+                 else:
+                     self.axes.grid(False)
 
-	         self.axes.set_xbound(lower=xmin, upper=xmax)
-	         self.axes.set_ybound(lower=ymin, upper=ymax)
-       
-	         # anecdote: axes.grid assumes b=True if any other flag is
-	         # given even if b is set to False.
-        	 # so just passing the flag into the first statement won't
-	         # work.
-        	 #
-	         if self.cb_grid.IsChecked():
-	             self.axes.grid(True, color='gray')
-	         else:
-        	     self.axes.grid(False)
+                 # Using setp here is convenient, because get_xticklabels
+                 # returns a list over which one needs to explicitly 
+                 # iterate, and setp already handles this.
+                 #  
+                 pylab.setp(self.axes.get_xticklabels(), 
+                 visible=self.cb_xlab.IsChecked())
 
-       		 # Using setp here is convenient, because get_xticklabels
-        	 # returns a list over which one needs to explicitly 
-	         # iterate, and setp already handles this.
-	         #  
-	         pylab.setp(self.axes.get_xticklabels(), 
-        	 visible=self.cb_xlab.IsChecked())
+            
+                 self.plot_data.set_xdata(np.arange(len(list(self.q.queue))))
+                 self.plot_data.set_ydata(np.array(list(self.q.queue)))
+                 self.canvas.draw()
+            
+             else: 
+                 if self.cb_grid.IsChecked():
+                     self.axes.grid(True, color='gray')
+                 else:
+                     self.axes.grid(False)
 
-        
-	         self.plot_data.set_xdata(np.arange(len(list(self.q.queue))))
-        	 self.plot_data.set_ydata(np.array(list(self.q.queue)))
-  		 self.canvas.draw()
+                 # Using setp here is convenient, because get_xticklabels
+                 # returns a list over which one needs to explicitly 
+                 # iterate, and setp already handles this.
+
+                 pylab.setp(self.axes.get_xticklabels(), 
+                 visible=self.cb_xlab.IsChecked())
+             
+                 self.plot_data.set_xdata(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end])
+                 self.plot_data.set_ydata(np.array(list(self.q.queue))[self.i_start:self.i_end])
+                self.axes.set_xlim(min(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end]),max(np.arange(len(list(self.q.queue)))[self.i_start:self.i_end]))
+    #        if self.zoom:
+                self.axes.set_ylim(min(np.array(list(self.q.queue))),max(np.array(list(self.q.queue))))
+             
+                self.canvas.draw()
 
 
     
@@ -345,7 +317,7 @@ class matplotsink(wx.Panel):
     def on_flash_status_off(self, event):
         self.statusbar.SetStatusText('')
 
-	
+    
 
 
 
