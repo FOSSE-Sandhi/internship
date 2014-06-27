@@ -31,10 +31,10 @@ class qa_sci_py (gr_unittest.TestCase):
 
     def test_001_t (self):
         # set up fg
-        src = gr.vector_source_f([3,5,3])
+        src = gr.vector_source_f([3]*1000)
 	sqr = sci_py()
 	
-	sqr.set_parameters("/home/rishabh/Downloads/test.sci",100)
+	sqr.set_parameters("/home/rishabh/Downloads/test.sci",1001,"y")
 	dst = gr.vector_sink_f()
 	self.tb.connect(src,sqr)
 	self.tb.connect(sqr,dst)

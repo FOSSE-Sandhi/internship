@@ -58,6 +58,23 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header("Content-type","text/html")
 		self.end_headers()
+		#print "Path:",self.path
+		if (self.path == "/"):
+			fp = open("index.html","r")
+			self.wfile.write(fp.read())
+			fp.close()
+			return
+		elif (self.path.startswith("/request")):
+			query = urlparse.urlparse(self.path).query
+			sink = query.split("&")[0]
+			flg = query.split("&")[1]
+			sink = sink.split("=")[1]
+			flg = flg.split("=")[1]
+			fp = open(flg + ".html","r")
+			data = fp.read()
+			response = data % vars()
+			self.wfile.write(response)
+			return	
 		query_string = urlparse.urlparse(self.path).query
 		description = [('Output number','string'),('Result','number')]
 		table = gviz_api.DataTable(description)
@@ -89,8 +106,9 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
                         </html>
         """
 		query_string = urllib.unquote(query_string)
+		#print "query_string",query_string
 		param_list = query_string.split("&")
-		param_list.insert(0,"./xmlparse2.py")
+		param_list.insert(0,"./xmlparse.py")
 		opts = self.path.split("/")
 		value = []
 		path_flow_graph = ""

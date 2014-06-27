@@ -79,7 +79,7 @@ self.$(id).set_parameters($polynomial, $x_range,$xlabel,$ylabel)
     -->
     <check>$num_inputs &gt; 0</check>
     <check>$vlen &gt; 0</check>
-    <sink>
+<!--    <sink>
         <name>in</name>
         <type>$(str($type).split('_')[0])</type>
         <vlen>$vlen</vlen>
@@ -90,6 +90,7 @@ self.$(id).set_parameters($polynomial, $x_range,$xlabel,$ylabel)
         <type>$(str($type).split('_')[1])</type>
         <vlen>$vlen</vlen>
     </source>
+-->
     <doc>
 
 The block plots a polynomial against the points mentioned in the xrange. Input the polynomial with 'x' as the variable in the following format:

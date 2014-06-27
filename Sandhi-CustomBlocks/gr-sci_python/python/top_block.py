@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Top Block
-# Generated: Sat Jun 21 17:09:09 2014
+# Generated: Tue Jun 24 11:13:24 2014
 ##################################################
 
 from gnuradio import eng_notation
@@ -29,12 +29,13 @@ class top_block(grc_wxgui.top_block_gui):
 		# Blocks
 		##################################################
 		self.sci_python_sci_py_0 = sci_py.sci_py()
-		self.sci_python_sci_py_0.set_parameters("/home/rishabh/Downloads/test.sci",900)
+		self.sci_python_sci_py_0.set_parameters("/home/rishabh/Downloads/test.sci",1,"y")
 		self.plot_sink_0 = plot_sink.plot_sink_f(
 			self.GetWin(),
 			title="Scope Plot",
 			vlen=1,
 			decim=1,
+			gsz=1000,
 		)
 		self.Add(self.plot_sink_0.win)
 		self.gr_null_source_0 = gr.null_source(gr.sizeof_float*1)
@@ -42,8 +43,8 @@ class top_block(grc_wxgui.top_block_gui):
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.sci_python_sci_py_0, 0), (self.plot_sink_0, 0))
 		self.connect((self.gr_null_source_0, 0), (self.sci_python_sci_py_0, 0))
+		self.connect((self.sci_python_sci_py_0, 0), (self.plot_sink_0, 0))
 
 
 	def get_samp_rate(self):

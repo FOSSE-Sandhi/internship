@@ -24,18 +24,23 @@ import gras
 import time
 class sci_py(gras.Block):
     """
-    docstring for block sci_py
+    Executes a given scilab file. The output vector should have the same name as the var_name. Set_parameters function sets the parameters passed by the users through Sandhi. The file_import function auto-generates a code string of the scilab file and feeds it to sciscipy module for execution. It then reads the value of the 'var_name' variable in the scilab file and feeds it to the flowgraph.
     """
     def __init__(self):
         gras.Block.__init__(self,
             name="sci_py",
             in_sig=[numpy.float32],
             out_sig=[numpy.float32])
-
+	self.i = 0
 	self.ret_array = []
-    def set_parameters(self,path,window):
+
+    def set_parameters(self,path,window,var_name):
 	self.path = path
 	self.n = window
+	self.var_name = var_name
+	self.file_import()
+
+    def file_import(self):
 	import sciscipy
 	f = open(self.path)
 	x = f.read()
@@ -46,7 +51,7 @@ class sci_py(gras.Block):
 		code_string += x[i]
 
 	sciscipy.eval(code_string)
-	self.ret_array = sciscipy.read("y")
+	self.ret_array = sciscipy.read(self.var_name)
 	#print self.ret_array
 
 
@@ -55,12 +60,16 @@ class sci_py(gras.Block):
         out = output_items[0]
 	self.ret_array = numpy.array(self.ret_array)
         # <+signal processing here+>
-        output_items[0][:len(self.ret_array)] = self.ret_array.tolist()
-	self.produce(0,len(self.ret_array))	
+	#print self.i
+	self.i+=1
+        #print self.i
+	#print len(self.ret_array)
+
+	if self.i >= len(self.ret_array):	#To reset the value of self.i
+                self.i = 0
+	
+	#producing one value at a time
+	output_items[0][:1] = numpy.array(self.ret_array[self.i])
+	self.produce(0,1)	
 	self.consume(0,1)
-	'''
-	for i in range(self.n):
-		print output_items[0][i]
-		self.produce(0,1)
-	'''
         #return len(output_items[0])
