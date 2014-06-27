@@ -19,7 +19,6 @@ class PlotSink:
 	'''Class to handle plot sinks'''
 	def __init__(self,path):
 		self.path = path
-		print "self.path:",self.path
 	
 	def process(self,limit):
 		'''Get upto limit values from the plot sink and return values to caller'''
@@ -59,6 +58,7 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
 		self.send_header("Content-type","text/html")
 		self.end_headers()
 		#print "Path:",self.path
+		graph_title = ""
 		if (self.path == "/"):
 			fp = open("index.html","r")
 			self.wfile.write(fp.read())
@@ -89,7 +89,7 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
                                                 {
                                                         var data = new google.visualization.DataTable(%(values)s,0.6);
                                                         var options = {
-                                                                title: 'Square Plot'
+                                                                title: '%(graph_title)s'
                                                                 };
 
                                                         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -99,7 +99,7 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
                                 </head>
                                 <body>
                                         <h1>FLOW GRAPH:</h1><br/>
-                                        <img src=%(path_flow_graph)s alt="flow graph" height="700" width="900" align="middle">
+                                        <img src="%(path_flow_graph)s" alt="flow graph" height="700" width="900" align="middle">
                                         <h1>PLOT:</h1><br/>
                                         <div id="chart_div" style="width: 1200px; height: 350px;"></div>
                                 </body>
@@ -145,6 +145,7 @@ class Server(BaseHTTPServer.BaseHTTPRequestHandler):
 		else:
 			self.wfile.write("Option not recognized")
 			return
+		graph_title = opts[2].capitalize()
 		table.AppendData(value)
 		values = table.ToJSon(columns_order=('Output number','Result'))
 		result = res % vars()
