@@ -1,0 +1,44 @@
+This provides an explanation of how to use the files in the current directory.
+The server is the main process that needs to be run.
+
+The server process is entirely responsible for processing user requests and retuning an appropriate response (in HTML) to the user.
+
+The server maintains the following mappings: 
+- HOME: Path to home directory
+- dir_dict: A dictionary that maps flow graphs to their respective directories
+- HOST_NAME: The address that needs to be used by the host
+- PORT_NUMBER: The port number at which to start the service
+- NUM_VALUES: Number of entries that need to be retrieved by the execution of the corresponding top_block.py file.
+
+The server comprises of 3 classes - PlotSink, FileSink and Server.
+The PlotSink class is used to handle flow graphs with a plot sink. Similarly, the FileSink class is used to handle flow graphs with a file sink. The Server class is the one responsible for handling requests and routing them to the appropriate class.
+
+PlotSink:
+The PlotSink class constructor takes path to the top_block.py file as a parameter. A function process is defined which is the heart of the computation. This function takes 'limit' as a parameter that specifies how many values are to be retrieved. This function spawns the corresponding top_block.py in a new process. It makes use of the fact that plot sink values are written to stdout. The values are picked up from the stdout and returned to the server.
+
+FileSink:
+The FileSink class constructor takes path to the top_block.py file as a parameter. A function process is defined whoch is the heart of the computation. This function takes 'limit' as a parameter that specifies how many values are to be retrieved. This function spawns top_block.py in a new process. It exploits the fact that with a file sink, all values are written out to a file. Scipy is used to read upto 'limit' values from the file and the values are then returned to the server.
+
+Server:
+This class is the one that runs the server and it derives from BaseHHTPServer.BaseHTTPRequestHandler. The action taken by the server depend on the path specified in the URL and are as follows:
+
+- path = "/" : 
+	This causes the server to return the home page "index.html" as a reponse. The home page provides options for further interaction between client and server.
+
+-path starting with "/request" : 
+	This is where "index.html" redirects to upon submitting the required options. The options selected in "index.html" are wrapped in a GET request and sent to this path. The query currently contains the sink type and name of the flow graph. From the name of the flow graph, the server redirects to the apropriate graph's HTML page. This page provides the facility for users to enter parameters for the flow graph and then redirects to the corresponding URL where all processing with respect to that flow graph occurs.
+
+- path ending with ".png" :
+	This implies an image file is being requested for (in our case, a screenshot of the flow graph). The file is opened and served as part of the response by the server.
+
+Upon receiving parameters, the server spawns a process defined by the file xmlparse.py. This uses Python's xml.dom package to modify the .grc file according to the parameters provided by the user. It further generates a top_block.py file using the "grcc" tool. The top_block.py file is placed in the same directory as the .grc file. The server waits for this process to complete before proceeding further.
+
+Now that the top_block.py file is created, the server proceeds to create an instance of either PlotSink or FileSink in order to retrieve values.Once the values are returned, the server puts these values into an HTML response that is designed to use Google Charts to plot a graph. The response, when sent to the client renders a screenshot of the flow graph and its corresponding plot.
+
+
+Some conventions that need to be followed:
+- All HTML files specific to a particular flow graph must be named "*flowgraphname*.html". For example, for the square block, the HTML file must be named "square.html".
+
+- All screenshots of flow graphs must be named "flowps.png" or "flowfs.png" depending on whether plot sink is used or file sink is used respectively. Also, these file must be in the same directory as held in the server mapping.
+
+- While using file sinks, the file name should always be "output".
